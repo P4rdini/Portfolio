@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Projeto</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        hr{
+            border: 1px solid white
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        h1, h2 {
+            font-weight: 700;
+            color: #ffffff;
+        }
+        h3, h2{
+            font-family: cursive;
+            color: #F0F2A6;
+        }
+        li{
+           font-family: monospace;
+        }
+        .card{
+            border-block-color:#AA6373;
+        }
+        .bg-card {
+            background-color: #1A1B25;
+        }
+        .bg {
+            background-color: #121212;
+        }
+        .custom-container {
+            margin: 5% auto;
+            max-width: 80%;
+        }
+        .border-card {
+            border-color: #121212;
+        }
+        .legends{
+            min-width: 100px;
+            text-align: left;
+        }
+        .img-icon{
+            opacity:0.3;
+        }
+        .gallery-container {
+            width: 90%; /* Largura máxima da galeria */
+            height: auto; /* Altura máxima da galeria */
+            overflow: hidden;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+        }
+
+        .gallery {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            padding: 1%;
+            height: 100%;
+        }
+
+        .gallery img {
+            width: 20%; /* Largura fixa para cada imagem */
+            aspect-ratio: 1/1;
+            margin:1%;
+            object-fit: cover;
+            border-radius: 5px;
+            transition: transform 0.2s;
+        }
+
+        .gallery img:hover {
+            transform: scale(1.05);
+        }
+
+        .remaining-images {
+            position: relative;
+            margin: 1%;
+            width: 20%;
+            aspect-ratio: 1/1;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .remaining-images img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: blur(5px); /* Desfoque na imagem */
+        }
+
+        .remaining-count {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 5px 10px;
+            border-radius: 50%;
+        }
+
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            padding-top: 60px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            text-align: center;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 80%;
+            margin: auto;
+            display: block;
+            border-radius: 5px;
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #ccc;
+        }
+        .arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 40px;
+            color: white;
+            cursor: pointer;
+            user-select: none;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+        }
+
+        .arrow.left {
+            left: 20px;
+        }
+
+        .arrow.right {
+            right: 20px;
+        }
+
+        .arrow:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        .list-unstyled li {
+         display:flex;
+         width:100%;
+         padding-left:2rem;
+        }
+        .list-unstyled li > div {
+            display: flex;
+            align-items: center;
+            width: 50%;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body class="text-white bg">
+<main class="custom-container">
+    <div class="row w-100">
+        <div class="col-12 col-md-3 card bg-card mb-2" style="border-radius: 2rem 0 0 2rem">
+            <div class="mb-2 d-flex justify-content-center mt-3" >
+                <img th:src="@{/img/exemplo.jpg}" class="card-img-top rounded-circle img-fluid" alt="img-perfil" style="height:200px; width:auto">
+            </div>
+            <div class="text-center">
+                <p><b>Rafael Pardini Santos</b></p>
+                <p>Sao Paulo</p>
+                <p th:text="${email}"></p>
+                <p th:text="${telefone}"></p>
+            </div>
+                <div class="card border-card bg-card mb-2 border-0">
+                    <li style="list-style-type:none ; width:100%; justify-content:center;" class="d-flex">
+                        <ul ><a class="btn btn-outline-secondary" href="https://github.com/P4rdini"><img th:src="@{/img/github.png}" width="25" class="" alt="GitHub">GitHub</a> </ul>
+                        <ul ><a class="btn btn-outline-primary" href="https://br.linkedin.com/?trk=guest_homepage-basic_nav-header-logo"><img th:src="@{/img/linkedin.png}" width="25" class="" alt="linkedin">Linkedin</a> </ul>
+                    </li>
+                </div>
+            <div class="card mb-1 bg border-card">
+                <div class="text-center">
+                   <h3><strong>Skill's</strong></h3>
+                </div>
+                <ul class="list-unstyled">
+                    <li class="">
+                        <div>
+                            <img th:src="@{/img/java.png}" width="35" class="img-icon" alt="java" >
+                            <span class="legends">Java</span>
+                        </div>
+                        <div>
+                            <img th:src="@{/img/springboot.png}" width="35" class="img-icon" alt="springboot">
+                            <span class="legends">Spring Boot</span>
+                        </div>
+                    </li>
+                    <li class="">
+                        <div>
+                            <img th:src="@{/img/sql.png}" width="35" class="img-icon" alt="SQL">
+                            <span class="legends">SQL</span>
+                        </div>
+                        <div>
+                            <img th:src="@{/img/thymeleaf.png}" width="35" class="img-icon" alt="Thymeleaf">
+                            <span class="legends">Thymeleaf</span>
+                        </div>
+                    </li>
+                    <li class="">
+                        <div>
+                            <img th:src="@{/img/api.png}" width="35" class="img-icon" alt="API">
+                            <span class="legends">API</span>
+                        </div>
+                        <div>
+                            <img th:src="@{/img/postgre.png}" width="35" class="img-icon" alt="PostreSQL">
+                            <span class="legends">PostreSQL</span>
+                        </div>
+                    </li>
+                    <li class="">
+                        <div>
+                            <img th:src="@{/img/html.png}" width="35" class="img-icon" alt="HTML">
+                            <span class="legends">HTML</span>
+                        </div>
+                        <div>
+                            <img th:src="@{/img/css.png}" width="35" class="img-icon" alt="CSS">
+                            <span class="legends">CSS</span>
+                        </div>
+                    </li>
+                    <li class="">
+                        <div>
+                            <img th:src="@{/img/javascript.png}" width="35" class="img-icon" alt="javascript">
+                            <span class="legends">Javascript</span>
+                        </div>
+                        <div>
+                            <img th:src="@{/img/bootstrap.png}" width="35" class="img-icon" alt="bootstrap">
+                            <span class="legends">Bootstrap</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        <div class="col-12 col-md-8 p-5 card ml-md-3 offset-md-1 bg-card mb-1">
+            <div class="mb-1">
+                <h2>Olá, Bem-vindo(a) ao meu Portfolio</h2>
+                <p>
+                    Sou um desenvolvedor apaixonado por criar soluções inovadoras e eficientes que proporcionam experiências excepcionais aos usuários. Com uma sólida formação em desenvolvimento de software e design, possuo habilidades para trabalhar em todas as etapas do ciclo de desenvolvimento, desde a concepção até a implementação e manutenção
+                </p>
+                <a href="mailto:pardini1992@gmail.com" class="btn btn-outline-danger">
+                    <img th:src="@{/img/gmail.png}" width="25" class="" alt="gmail"> Gmail
+                </a>
+                <a href="https://wa.me/5511981874361?text=Ola,vim_pelo_Portfolio" class="btn btn-outline-success">
+                    <img th:src="@{/img/whatsapp.png}" width="25" class="" alt="whatsapp"> WhatsApp
+                </a>
+            </div>
+            <hr>
+            <div class="mt-1">
+              <!--  <div class="gallery-container">
+                    <div class="gallery">
+                    </div>
+                </div> -->
+                <div id="lightbox" class="lightbox">
+                    <span class="close">&times;</span>
+                    <span class="arrow left">&larr;</span> <!-- Seta esquerda -->
+                    <span class="arrow right">&rarr;</span> <!-- Seta direita -->
+                    <img class="lightbox-content" id="lightbox-img">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+
+        var projetos = [[${projects}]];
+        const maxImages = 7; // Número máximo de imagens que cabem na div
+        var listImagem;
+
+           function createProjects(){
+            const divContainer = document.querySelector('.mt-1');
+            projetos.forEach((projeto) => {
+                const divText = document.createElement('div');
+                const paragrafo = document.createElement('p')
+                const title = document.createElement('h2');
+                const subTitle = document.createElement('h3');
+
+                paragrafo.style.marginTop = "2rem";
+                paragrafo.style.marginBottom = "2rem";
+                paragrafo.style.lineHeight= "inherit";
+                paragrafo.style.color= "floralwhite";
+                paragrafo.style.whiteSpace = "pre-line";
+                paragrafo.textContent = projeto.descricao;
+
+                title.textContent = projeto.titulo;
+                title.style.textAlign = "center";
+                subTitle.textContent = "Tecnologias usadas";
+                divText.style.marginTop = "2rem";
+                divText.style.paddingBlock= "1rem";
+
+                divText.appendChild(title);
+                divText.appendChild(paragrafo);
+                divContainer.appendChild(divText);
+                divText.appendChild(subTitle);
+                projeto.listSkill.forEach((skill) => {
+                    var li = document.createElement('li');
+                    li.textContent = skill;
+                    li.style.listStyleType = "circle";
+                    divText.appendChild(li);
+                })
+                createGallery(projeto.listImagem,divContainer);
+                listImagem = projeto.listImagem;
+            });
+           }
+           createProjects();
+
+           /*     // Array de URLs das imagens
+            const  const images = [
+            "/img/sinistro/login.png",
+            "/img/sinistro/criarConta.png",
+            "/img/sinistro/esqueceuSenha.png",
+            "/img/sinistro/home.png",
+            "/img/sinistro/listaUsuario.png",
+            "/img/sinistro/alteracaoSenha.png",
+            "/img/sinistro/cadastroAgentes.png",
+            "/img/sinistro/cadastroOcorrencia.png",
+            ];  */
+
+
+
+            // Função para criar a galeria
+            function createGallery(images,container) {
+               const containerGallery = document.createElement('div');
+               containerGallery.classList.add('gallery-container');
+               const gallery = document.createElement('div');
+               const hr = document.createElement('hr')
+
+               gallery.classList.add('gallery');
+
+               containerGallery.appendChild(gallery);
+               // 1. Verifica se o container existe
+                if (!gallery) {
+                    console.error('Container .gallery não encontrado');
+                    return;
+                }
+
+                // 2. Valida o array de imagens
+                if (!Array.isArray(images)) {
+                    console.error('Images deve ser um array', images);
+                    return;
+                }
+
+                // 3. Limite máximo de imagens (opcional)
+                const imagesToShow = images.slice(0, maxImages);
+
+                // 4. Cria as imagens no DOM
+                imagesToShow.forEach((image) => {
+                    // Verificação correta dos dados da imagem
+                    if (!image.dadosbase64 && !image.url) {
+                        console.warn('Imagem sem dados válidos', image);
+                        return;
+                    }
+
+                    const img = document.createElement('img');
+
+                    // Construção do src corretamente
+                    if (image.url) {
+                        img.src = image.url;
+                    } else {
+                        img.src = `data:image/${image.tipo || 'jpeg'};base64,${image.dadosbase64}`;
+                    }
+
+                    img.alt = `Imagem ${image.ID || ''}`;
+                    img.classList.add('gallery-image');
+
+                    // Tratamento de erro
+                    img.onerror = () => console.error(`Erro ao carregar imagem ID: ${image.ID}`);
+
+                    gallery.appendChild(img);
+                    container.appendChild(containerGallery);
+                    container.appendChild(hr);
+                });
+
+
+            // Se houver mais imagens do que o limite, adiciona o bloco de imagens restantes
+            if (images.length > maxImages) {
+
+                    const remainingCount = images.length - maxImages;
+                    const remainingBlock = document.createElement('div');
+                    remainingBlock.classList.add('remaining-images');
+
+
+                    const img = document.createElement('img');
+                    img.src = images[maxImages].url || `data:image/${images[maxImages].tipo || 'jpeg'};base64,${images[maxImages].dadosbase64}`;
+                    remainingBlock.appendChild(img);
+
+                    const count = document.createElement('div');
+                    count.classList.add('remaining-count');
+                    count.textContent = `+${remainingCount}`;
+                    remainingBlock.appendChild(count);
+
+                    remainingBlock.addEventListener('click',() =>{
+                        openLightbox(maxImages);
+                    });
+
+                    gallery.appendChild(remainingBlock);
+                }
+            }
+            // Lightbox
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const closeBtn = document.querySelector('.close');
+            const arrowLeft = document.querySelector('.arrow.left');
+            const arrowRight = document.querySelector('.arrow.right');
+
+            let currentImageIndex = 0;
+
+            // Abre o lightbox e exibe a imagem clicada
+            function openLightbox(index) {
+                const imagem = document.querySelectorAll('.gallery img');
+                lightbox.style.display = 'block';
+                lightboxImg.src = imagem[index].src;
+                currentImageIndex = index;
+            }
+
+            // Fecha o lightbox
+            function closeLightbox() {
+                lightbox.style.display = 'none';
+            }
+
+            // Navega para a imagem anterior
+            function showPreviousImage() {
+            const images = document.querySelectorAll('.gallery img');
+                currentImageIndex = (currentImageIndex - 1 + listImagem.length) % listImagem.length;
+                lightboxImg.src = images[currentImageIndex].src;
+            }
+
+            // Navega para a próxima imagem
+            function showNextImage() {
+                currentImageIndex = (currentImageIndex + 1) % listImagem.length;
+
+                // Verifica se a imagem já está renderizada
+                if (currentImageIndex < maxImages) {
+                    const images = document.querySelectorAll('.gallery img');
+                    lightboxImg.src = images[currentImageIndex].src;
+                } else {
+                    // Acessa diretamente do array allImages
+                    lightboxImg.src = `data:image/${listImagem[currentImageIndex].tipo || 'jpeg'};base64,${listImagem[currentImageIndex].dadosbase64}`;
+                }
+            }
+
+            // Adiciona eventos de clique às imagens da galeria
+            const galleryImages = document.querySelectorAll('.gallery-image');
+            galleryImages.forEach((image, index) => {
+                image.addEventListener('click', () => {
+                    openLightbox(index);
+                });
+            });
+
+
+            // Adiciona eventos de clique às setas
+            arrowLeft.addEventListener('click', showPreviousImage);
+            arrowRight.addEventListener('click', showNextImage);
+
+            // Fecha o lightbox ao clicar no botão de fechar
+            closeBtn.addEventListener('click', closeLightbox);
+
+            // Fecha o lightbox ao clicar fora da imagem
+            lightbox.addEventListener('click', (e) => {
+                if (e.target !== lightboxImg && !e.target.classList.contains('arrow')) {
+                    closeLightbox();
+                }
+            });
+
+
+
+    </script>
+</main>
+</body>
+</html>
