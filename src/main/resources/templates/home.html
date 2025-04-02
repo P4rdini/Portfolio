@@ -281,210 +281,246 @@
             </div>
         </div>
     </div>
-    <script th:inline="javascript">
-
-        var projetos = [[${projects}]];
-        const maxImages = 7; // Número máximo de imagens que cabem na div
-        var listImagem;
-
-           function createProjects(){
-            const divContainer = document.querySelector('.mt-1');
-            projetos.forEach((projeto) => {
-                const divText = document.createElement('div');
-                const paragrafo = document.createElement('p')
-                const title = document.createElement('h2');
-                const subTitle = document.createElement('h3');
-
-                paragrafo.style.marginTop = "2rem";
-                paragrafo.style.marginBottom = "2rem";
-                paragrafo.style.lineHeight= "inherit";
-                paragrafo.style.color= "floralwhite";
-                paragrafo.style.whiteSpace = "pre-line";
-                paragrafo.textContent = projeto.descricao;
-
-                title.textContent = projeto.titulo;
-                title.style.textAlign = "center";
-                subTitle.textContent = "Tecnologias usadas";
-                divText.style.marginTop = "2rem";
-                divText.style.paddingBlock= "1rem";
-
-                divText.appendChild(title);
-                divText.appendChild(paragrafo);
-                divContainer.appendChild(divText);
-                divText.appendChild(subTitle);
-                projeto.listSkill.forEach((skill) => {
-                    var li = document.createElement('li');
-                    li.textContent = skill;
-                    li.style.listStyleType = "circle";
-                    divText.appendChild(li);
-                })
-                createGallery(projeto.listImagem,divContainer);
-                listImagem = projeto.listImagem;
-            });
-           }
-           createProjects();
-
-           /*     // Array de URLs das imagens
-            const  const images = [
-            "/img/sinistro/login.png",
-            "/img/sinistro/criarConta.png",
-            "/img/sinistro/esqueceuSenha.png",
-            "/img/sinistro/home.png",
-            "/img/sinistro/listaUsuario.png",
-            "/img/sinistro/alteracaoSenha.png",
-            "/img/sinistro/cadastroAgentes.png",
-            "/img/sinistro/cadastroOcorrencia.png",
-            ];  */
-
-
-
-            // Função para criar a galeria
-            function createGallery(images,container) {
-               const containerGallery = document.createElement('div');
-               containerGallery.classList.add('gallery-container');
-               const gallery = document.createElement('div');
-               const hr = document.createElement('hr')
-
-               gallery.classList.add('gallery');
-
-               containerGallery.appendChild(gallery);
-               // 1. Verifica se o container existe
-                if (!gallery) {
-                    console.error('Container .gallery não encontrado');
-                    return;
-                }
-
-                // 2. Valida o array de imagens
-                if (!Array.isArray(images)) {
-                    console.error('Images deve ser um array', images);
-                    return;
-                }
-
-                // 3. Limite máximo de imagens (opcional)
-                const imagesToShow = images.slice(0, maxImages);
-
-                // 4. Cria as imagens no DOM
-                imagesToShow.forEach((image) => {
-                    // Verificação correta dos dados da imagem
-                    if (!image.dadosbase64 && !image.url) {
-                        console.warn('Imagem sem dados válidos', image);
-                        return;
-                    }
-
-                    const img = document.createElement('img');
-
-                    // Construção do src corretamente
-                    if (image.url) {
-                        img.src = image.url;
-                    } else {
-                        img.src = `data:image/${image.tipo || 'jpeg'};base64,${image.dadosbase64}`;
-                    }
-
-                    img.alt = `Imagem ${image.ID || ''}`;
-                    img.classList.add('gallery-image');
-
-                    // Tratamento de erro
-                    img.onerror = () => console.error(`Erro ao carregar imagem ID: ${image.ID}`);
-
-                    gallery.appendChild(img);
-                    container.appendChild(containerGallery);
-                    container.appendChild(hr);
-                });
-
-
-            // Se houver mais imagens do que o limite, adiciona o bloco de imagens restantes
-            if (images.length > maxImages) {
-
-                    const remainingCount = images.length - maxImages;
-                    const remainingBlock = document.createElement('div');
-                    remainingBlock.classList.add('remaining-images');
-
-
-                    const img = document.createElement('img');
-                    img.src = images[maxImages].url || `data:image/${images[maxImages].tipo || 'jpeg'};base64,${images[maxImages].dadosbase64}`;
-                    remainingBlock.appendChild(img);
-
-                    const count = document.createElement('div');
-                    count.classList.add('remaining-count');
-                    count.textContent = `+${remainingCount}`;
-                    remainingBlock.appendChild(count);
-
-                    remainingBlock.addEventListener('click',() =>{
-                        openLightbox(maxImages);
-                    });
-
-                    gallery.appendChild(remainingBlock);
-                }
-            }
-            // Lightbox
-            const lightbox = document.getElementById('lightbox');
-            const lightboxImg = document.getElementById('lightbox-img');
-            const closeBtn = document.querySelector('.close');
-            const arrowLeft = document.querySelector('.arrow.left');
-            const arrowRight = document.querySelector('.arrow.right');
-
-            let currentImageIndex = 0;
-
-            // Abre o lightbox e exibe a imagem clicada
-            function openLightbox(index) {
-                const imagem = document.querySelectorAll('.gallery img');
-                lightbox.style.display = 'block';
-                lightboxImg.src = imagem[index].src;
-                currentImageIndex = index;
-            }
-
-            // Fecha o lightbox
-            function closeLightbox() {
-                lightbox.style.display = 'none';
-            }
-
-            // Navega para a imagem anterior
-            function showPreviousImage() {
-            const images = document.querySelectorAll('.gallery img');
-                currentImageIndex = (currentImageIndex - 1 + listImagem.length) % listImagem.length;
-                lightboxImg.src = images[currentImageIndex].src;
-            }
-
-            // Navega para a próxima imagem
-            function showNextImage() {
-                currentImageIndex = (currentImageIndex + 1) % listImagem.length;
-
-                // Verifica se a imagem já está renderizada
-                if (currentImageIndex < maxImages) {
-                    const images = document.querySelectorAll('.gallery img');
-                    lightboxImg.src = images[currentImageIndex].src;
-                } else {
-                    // Acessa diretamente do array allImages
-                    lightboxImg.src = `data:image/${listImagem[currentImageIndex].tipo || 'jpeg'};base64,${listImagem[currentImageIndex].dadosbase64}`;
-                }
-            }
-
-            // Adiciona eventos de clique às imagens da galeria
-            const galleryImages = document.querySelectorAll('.gallery-image');
-            galleryImages.forEach((image, index) => {
-                image.addEventListener('click', () => {
-                    openLightbox(index);
-                });
-            });
-
-
-            // Adiciona eventos de clique às setas
-            arrowLeft.addEventListener('click', showPreviousImage);
-            arrowRight.addEventListener('click', showNextImage);
-
-            // Fecha o lightbox ao clicar no botão de fechar
-            closeBtn.addEventListener('click', closeLightbox);
-
-            // Fecha o lightbox ao clicar fora da imagem
-            lightbox.addEventListener('click', (e) => {
-                if (e.target !== lightboxImg && !e.target.classList.contains('arrow')) {
-                    closeLightbox();
-                }
-            });
-
-
-
-    </script>
 </main>
+<script th:inline="javascript">
+
+    var projetos = [[${projects}]];
+    const maxImages = 7; // Número máximo de imagens que cabem na div
+    var listImagem;
+    var todasImagens = [];
+    let currentImageIndex = 0;
+    let currentImages = []; // Array das imagens atualmente sendo visualizadas
+
+       function createProjects(){
+        const divContainer = document.querySelector('.mt-1');
+        projetos.forEach((projeto,projetoIndex) => {
+            const divText = document.createElement('div');
+            const paragrafo = document.createElement('p')
+            const title = document.createElement('h2');
+            const subTitle = document.createElement('h3');
+
+            paragrafo.style.marginTop = "2rem";
+            paragrafo.style.marginBottom = "2rem";
+            paragrafo.style.lineHeight= "inherit";
+            paragrafo.style.color= "floralwhite";
+            paragrafo.style.whiteSpace = "pre-line";
+            paragrafo.textContent = projeto.descricao;
+
+            title.textContent = projeto.titulo;
+            title.style.textAlign = "center";
+            subTitle.textContent = "Tecnologias usadas";
+            divText.style.marginTop = "2rem";
+            divText.style.paddingBlock= "1rem";
+
+            divText.appendChild(title);
+            divText.appendChild(paragrafo);
+            divContainer.appendChild(divText);
+            divText.appendChild(subTitle);
+            projeto.listSkill.forEach((skill) => {
+                var li = document.createElement('li');
+                li.textContent = skill;
+                li.style.listStyleType = "circle";
+                divText.appendChild(li);
+            })
+            createGallery(projeto.listImagem,divContainer,projetoIndex);
+            todasImagens.push(...projeto.listImagem);
+        });
+       }
+       createProjects();
+
+       /*     // Array de URLs das imagens
+        const  const images = [
+        "/img/sinistro/login.png",
+        "/img/sinistro/criarConta.png",
+        "/img/sinistro/esqueceuSenha.png",
+        "/img/sinistro/home.png",
+        "/img/sinistro/listaUsuario.png",
+        "/img/sinistro/alteracaoSenha.png",
+        "/img/sinistro/cadastroAgentes.png",
+        "/img/sinistro/cadastroOcorrencia.png",
+        ];  */
+
+
+
+        // Função para criar a galeria
+        function createGallery(images,container, projetoIndex) {
+           const containerGallery = document.createElement('div');
+           containerGallery.classList.add('gallery-container');
+           const gallery = document.createElement('div');
+           const hr = document.createElement('hr')
+
+           gallery.classList.add('gallery');
+
+           containerGallery.appendChild(gallery);
+           // 1. Verifica se o container existe
+            if (!gallery) {
+                console.error('Container .gallery não encontrado');
+                return;
+            }
+
+            // 2. Valida o array de imagens
+            if (!Array.isArray(images)) {
+                console.error('Images deve ser um array', images);
+                return;
+            }
+
+            // 3. Limite máximo de imagens (opcional)
+            const imagesToShow = images.slice(0, maxImages);
+
+            // 4. Cria as imagens no DOM
+            imagesToShow.forEach((image, index) => {
+                // Verificação correta dos dados da imagem
+                if (!image.dadosbase64 && !image.url) {
+                    console.warn('Imagem sem dados válidos', image);
+                    return;
+                }
+
+                const img = document.createElement('img');
+
+                // Construção do src corretamente
+                if (image.url) {
+                    img.src = image.url;
+                } else {
+                    img.src = `data:image/${image.tipo || 'jpeg'};base64,${image.dadosbase64}`;
+                }
+
+                img.alt = `Imagem ${image.ID || ''}`;
+                img.classList.add('gallery-image');
+
+                // Tratamento de erro
+                img.onerror = () => console.error(`Erro ao carregar imagem ID: ${image.ID}`);
+
+                img.dataset.realIndex = index;
+
+
+
+
+                gallery.appendChild(img);
+                container.appendChild(containerGallery);
+                container.appendChild(hr);
+                img.dataset.projetoIndex = projetoIndex;
+                img.dataset.imageIndex = index;
+
+            });
+
+
+        // Se houver mais imagens do que o limite, adiciona o bloco de imagens restantes
+        if (images.length > maxImages) {
+
+                const remainingCount = images.length - maxImages;
+                const remainingBlock = document.createElement('div');
+                remainingBlock.classList.add('remaining-images');
+
+
+                const img = document.createElement('img');
+                img.src = images[maxImages].url || `data:image/${images[maxImages].tipo || 'jpeg'};base64,${images[maxImages].dadosbase64}`;
+                img.dataset.realIndex = maxImages;
+                remainingBlock.appendChild(img);
+
+                const count = document.createElement('div');
+                count.classList.add('remaining-count');
+                count.textContent = `+${remainingCount}`;
+                remainingBlock.appendChild(count);
+
+                remainingBlock.addEventListener('click',() =>{
+                    openLightbox(maxImages);
+                });
+
+                gallery.appendChild(remainingBlock);
+
+            }
+        }
+        // Lightbox
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const closeBtn = document.querySelector('.close');
+        const arrowLeft = document.querySelector('.arrow.left');
+        const arrowRight = document.querySelector('.arrow.right');
+
+
+        // Abre o lightbox e exibe a imagem clicada
+        function openLightbox(index,imagens) {
+            // Se não receber imagens específicas, usa todasImagens como fallback
+            currentImages = imagens || todasImagens;
+
+            if (isNaN(index) || index < 0 || index >= currentImages.length) {
+                console.error('Índice inválido:', index);
+                return;
+            }
+
+            const image = currentImages[index];
+            if (!image) {
+                console.error('Imagem não encontrada no índice:', index);
+                return;
+            }
+
+            lightbox.style.display = 'block';
+            lightboxImg.src = image.url ||
+                             `data:image/${image.tipo || 'jpeg'};base64,${image.dadosbase64 || ''}`;
+            currentImageIndex = index;
+        }
+
+        // Fecha o lightbox
+        function closeLightbox() {
+            lightbox.style.display = 'none';
+        }
+
+        // Navega para a imagem anterior
+        function showPreviousImage() {
+            if (currentImages.length === 0) return;
+            currentImageIndex = (currentImageIndex - 1 + currentImages.length) % currentImages.length;
+            openLightbox(currentImageIndex, currentImages);
+        }
+
+        // Navega para a próxima imagem
+        function showNextImage() {
+            if (currentImages.length === 0) return;
+            currentImageIndex = (currentImageIndex + 1) % currentImages.length;
+            openLightbox(currentImageIndex, currentImages);
+        }
+
+        // Adiciona eventos de clique às imagens da galeria
+        document.querySelector('.mt-1').addEventListener('click', (e) => {
+            const image = e.target.closest('.gallery-image, .remaining-images');
+
+            if (image) {
+                let projetoIndex, imageIndex;
+
+                if (image.classList.contains('remaining-images')) {
+                    // Para remaining images, pega o projeto pelo container pai
+                    const galleryContainer = image.closest('.gallery-container');
+                    const galleryIndex = Array.from(document.querySelectorAll('.gallery-container')).indexOf(galleryContainer);
+                    projetoIndex = galleryIndex;
+                    imageIndex = maxImages; // Índice da primeira imagem oculta
+                } else {
+                    // Para imagens normais
+                    projetoIndex = parseInt(image.dataset.projetoIndex);
+                    imageIndex = parseInt(image.dataset.imageIndex);
+                }
+
+                if (!isNaN(projetoIndex) && !isNaN(imageIndex) && projetos[projetoIndex]) {
+                    openLightbox(imageIndex, projetos[projetoIndex].listImagem);
+                }
+            }
+        });
+
+
+        // Adiciona eventos de clique às setas
+        arrowLeft.addEventListener('click', showPreviousImage);
+        arrowRight.addEventListener('click', showNextImage);
+
+        // Fecha o lightbox ao clicar no botão de fechar
+        closeBtn.addEventListener('click', closeLightbox);
+
+        // Fecha o lightbox ao clicar fora da imagem
+        lightbox.addEventListener('click', (e) => {
+            if (e.target !== lightboxImg && !e.target.classList.contains('arrow')) {
+                closeLightbox();
+            }
+        });
+
+
+
+</script>
 </body>
 </html>
