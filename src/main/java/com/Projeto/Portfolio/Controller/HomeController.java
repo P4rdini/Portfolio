@@ -18,7 +18,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/")
 public class HomeController {
-    private String caminhoPadrao = "src/main/java/com/Projeto/Portfolio/imagens/";
+    private String caminhoPadrao = "src/main/resources/imagens/";
 
     @GetMapping
     public String getHome(HttpServletRequest request){
