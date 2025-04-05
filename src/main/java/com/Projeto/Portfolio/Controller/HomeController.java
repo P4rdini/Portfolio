@@ -10,6 +10,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +22,12 @@ import java.util.List;
 @Controller
 @RequestMapping("/")
 public class HomeController {
+
+    @GetMapping("/health")
+    @ResponseBody
+    public String healthCheck() {
+        return "OK";
+    }
 
     @GetMapping
     public String getHome(HttpServletRequest request){
