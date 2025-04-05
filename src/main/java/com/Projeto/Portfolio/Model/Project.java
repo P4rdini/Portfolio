@@ -1,21 +1,21 @@
 package com.Projeto.Portfolio.Model;
 
 import com.Projeto.Portfolio.Resources.Skill;
-import jakarta.persistence.*;
+// import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class Project {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+   /* @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)*/
     private Long id;
     private String titulo;
     private String descricao;
     private String link;
-    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
-    @JoinColumn(name = "project_id")
+   /* @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
+    @JoinColumn(name = "project_id")*/
     private List<Imagem> listImagem = new ArrayList<>();
     private List<Skill> listSkill = new ArrayList<>();
 

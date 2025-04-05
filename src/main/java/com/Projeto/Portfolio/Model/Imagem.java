@@ -1,9 +1,9 @@
 package com.Projeto.Portfolio.Model;
 
-import jakarta.persistence.Entity;
+/*import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.Id;*/
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,8 +12,8 @@ import java.nio.file.Paths;
 
 public class Imagem {
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
+       /* @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)*/
         private Long id;
         private String nome;
         private String tipo;
