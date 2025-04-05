@@ -1,15 +1,18 @@
 package com.Projeto.Portfolio.Controller;
 
+
 import com.Projeto.Portfolio.Model.Contact;
 import com.Projeto.Portfolio.Model.Imagem;
 import com.Projeto.Portfolio.Model.Project;
 import com.Projeto.Portfolio.Resources.Skill;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -18,7 +21,6 @@ import java.util.List;
 @Controller
 @RequestMapping("/")
 public class HomeController {
-    private String caminhoPadrao = "src/main/resources/imagens/";
 
     @GetMapping
     public String getHome(HttpServletRequest request){
@@ -84,16 +86,20 @@ public class HomeController {
         request.setAttribute("projects",listProjects);
         return "home";
     }
-    public Imagem criarImagem(String caminho,String tipo,String nome){
+    public Imagem criarImagem(String caminho, String tipo, String nome){
         Imagem imagem = new Imagem();
         try {
-            byte[] testeImagem = imagem.getImageBytes(caminho);
-            imagem.setDados(testeImagem);
-            imagem.setTipo(tipo);
-            imagem.setNome(nome);
-            imagem.setDadosbase64(convertImageToBase64(imagem.getDados()));
+            // Modificado: Usando ClassPathResource para acessar o arquivo
+            ClassPathResource resource = new ClassPathResource("static/imagens/" + caminho);
+            try (InputStream inputStream = resource.getInputStream()) {
+                byte[] imageBytes = inputStream.readAllBytes();
+                imagem.setDados(imageBytes);
+                imagem.setTipo(tipo);
+                imagem.setNome(nome);
+                imagem.setDadosbase64(convertImageToBase64(imageBytes));
+            }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Erro ao carregar imagem: " + caminho, e);
         }
         return imagem;
     }
@@ -145,11 +151,12 @@ public class HomeController {
     }
 
     public List<String> getCaminhoImagem(String pasta,int tamanho){
-        List<String> caminhoImagem = new ArrayList<>();
-        for(int i=1;i<(tamanho+1);i++){
-            caminhoImagem.add(caminhoPadrao+"/"+pasta+"/"+i+".png");
+        List<String> caminhos = new ArrayList<>();
+        for (int i = 1; i <= tamanho; i++) {
+            // Modificado: Retorna apenas o caminho relativo
+            caminhos.add(pasta + "/" + i + ".png");
         }
-        return caminhoImagem;
+        return caminhos;
     }
 
 
