@@ -49,10 +49,27 @@ public class HomeController {
         Project project1 = preenchendoProjects(titulo,descricao,caminhoProject1,listSkill);
 
         String titulo2= "Desafio Alura";
-        String descricao2= "sladfjlskdfjsk lafksdj flkaj fdklf";
+        String descricao2= "Desenvolvi um sistema para importação e análise de transações bancárias, com foco na identificação de movimentações suspeitas. A plataforma permite a importação de arquivos no formato CSV ou XML, que são processados e armazenados no banco de dados através de DTOs (Data Transfer Objects), garantindo uma integração eficiente e segura dos dados.\n" +
+                "\n" +
+                "O sistema conta com um módulo de análise que identifica as transações potencialmente suspeitas com base em critérios pré-definidos. Todas as transações individuais acima de 100 mil sao sinalizadas como suspeitas. As contas que receberam mais de 1 milhão no período analisado, bem como agências com movimentação total superior a R$ 1 bilhão no mês.\n" +
+                "\n" +
+                "Para garantir a segurança e o controle de acesso, o sistema foi integrado ao Spring Security, oferecendo autenticação robusta e proteção contra acessos não autorizados.";
         List<Skill> listSkill2 = Arrays.asList(Skill.JAVA, Skill.SPRINGBOOT, Skill.SPRINGJPA, Skill.SPRINGSECURITY, Skill.POSTGRESQL, Skill.THYMELEAF, Skill.BOOTSTRAP, Skill.HTML);
         List<String> caminhoProject2 = getCaminhoImagem("desafio_alura", 6);
         Project project2 = preenchendoProjects(titulo2, descricao2, caminhoProject2, listSkill2);
+
+        String titulo3 = "MUDI";
+
+        String descricao3="Este projeto consiste em um sistema onde vendedores podem cadastrar produtos com informações detalhadas, como imagem, descrição, características e site de origem. Os compradores, por sua vez, têm a possibilidade de fazer ofertas, incluindo o valor que estão dispostos a pagar e a data de entrega desejada.\n" +
+                "\n" +
+                "O vendedor recebe todas as ofertas relacionadas a um determinado produto e tem a liberdade de aprovar ou reprovar cada uma delas. O sistema também oferece um acompanhamento do status do pedido, que pode ser: Aguardando aprovação, Aprovado ou Entregue. Além disso, há uma seção dedicada aos \"Últimos produtos\", onde são exibidos todos os itens já vendidos.\n" +
+                "\n" +
+                "O principal objetivo desse sistema é facilitar a compra de produtos internacionais, funcionando como uma ponte entre compradores e viajantes. Pessoas que estão fora do país podem atuar como intermediárias, trazendo produtos sob demanda para clientes locais.\n" +
+                "\n" +
+                "Vale ressaltar que este projeto foi desenvolvido como um exercício de aprendizado, utilizando o framework Spring Boot para aprimorar conhecimentos em desenvolvimento de sistemas.";
+        List<Skill> listSkill3 = Arrays.asList(Skill.JAVA,Skill.SPRINGBOOT,Skill.SPRINGSECURITY,Skill.SPRINGJPA,Skill.SPRINGMVC,Skill.POSTGRESQL,Skill.THYMELEAF,Skill.BOOTSTRAP,Skill.HTML);
+        List<String> caminhoProject3 = getCaminhoImagem("mudi",6);
+        Project project3 = preenchendoProjects(titulo3,descricao3,caminhoProject3,listSkill3);
 
         Contact contact = new Contact();
         contact.setEmail("pardini1992@gmail.com");
@@ -60,6 +77,7 @@ public class HomeController {
         List<Project> listProjects = new ArrayList<>();
         listProjects.add(project1);
         listProjects.add(project2);
+        listProjects.add(project3);
 
         request.setAttribute("email",contact.getEmail());
         request.setAttribute("telefone",contact.getTelefone());
