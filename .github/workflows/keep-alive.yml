@@ -1,0 +1,19 @@
+name: Keep Render Alive  # Nome do workflow
+on:
+  schedule:
+    - cron: '*/5 * * * *'  # Executa a cada 5 minutos
+  workflow_dispatch:       # Permite executar manualmente
+
+jobs:
+  ping-render:
+    runs-on: ubuntu-latest  # Sistema operacional usado pelo GitHub
+    steps:
+      - name: Send GET request to health endpoint
+        run: |
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" "https://seu-app.onrender.com/health")
+          if [ "$RESPONSE" -ne 200 ]; then
+            echo "❌ Health check failed (HTTP $RESPONSE)"
+            exit 1
+          else
+            echo "✅ App is alive!"
+          fi
