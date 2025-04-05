@@ -47,7 +47,7 @@ public class HomeController {
                 Esta solução foi desenvolvida para otimizar processos, reduzir erros e garantir a padronização na documentação técnica, proporcionando maior eficiência operacional e qualidade no atendimento aos clientes.""";
 
         List<Skill> listSkill = Arrays.asList(Skill.JAVA, Skill.SPRINGBOOT, Skill.SPRINGJPA, Skill.SPRINGSECURITY, Skill.POSTGRESQL, Skill.THYMELEAF, Skill.JAVASCRIPT, Skill.BOOTSTRAP, Skill.HTML);
-        List<String> caminhoProject1 = getCaminhoImagem("controle_fluxo_trabalho", 14);
+        List<String> caminhoProject1 = getCaminhoImagem("controle_fluxo_trabalho", 15);
         Project project1 = preenchendoProjects(titulo,descricao,caminhoProject1,listSkill);
 
         String titulo2= "Desafio Alura";
